@@ -3,7 +3,7 @@ import sys
 import certifi
 import pymongo
 
-from src.constant import *
+from src.constant import MONGO_DATABASE_NAME  #,AWS_S3_BUCKET_NAME
 from src.exception import CustomException
 
 ca = certifi.where()
