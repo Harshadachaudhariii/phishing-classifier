@@ -5,12 +5,12 @@ import os
 import numpy as np
 import pandas as pd
 import pickle
-import yaml
+import yaml 
 import boto3
 
 from src.constant import *
 from src.exception import CustomException
-from src.logging import logging
+from src.logger import logging
 
 
 class MainUtils:
