@@ -16,93 +16,87 @@ from src.utils.main_utils import MainUtils
 
 from dataclasses import dataclass
 
-
 @dataclass
 class ModelTrainerConfig:
     model_trainer_dir = os.path.join(artifact_folder, 'model_trainer')
     trained_model_path = os.path.join(model_trainer_dir, 'trained_model', "model.pkl")
     expected_accuracy = 0.45
     model_config_file_path = os.path.join('config', 'model.yaml')
-
-
+    
 class VisibilityModel:
     def __init__(self, preprocessing_object: ColumnTransformer, trained_model_object):
         self.preprocessing_object = preprocessing_object
-
+        
         self.trained_model_object = trained_model_object
-
+        
     def predict(self, X: pd.DataFrame) -> pd.DataFrame:
         logging.info("Entered predict method of srcTruckModel class")
-
+        
         try:
             logging.info("Using the trained model to get predictions")
-
+            
             transformed_feature = self.preprocessing_object.transform(X)
-
+            
             logging.info("Used the trained model to get predictions")
-
+            
             return self.trained_model_object.predict(transformed_feature)
-
+            
         except Exception as e:
             raise CustomException(e, sys) from e
-
+            
     def __repr__(self):
         return f"{type(self.trained_model_object).__name__}()"
-
+        
     def __str__(self):
         return f"{type(self.trained_model_object).__name__}()"
-
-
+        
 class ModelTrainer:
     def __init__(self):
-
+        
         self.model_trainer_config = ModelTrainerConfig()
-
+        
         self.utils = MainUtils()
-
+        
         self.models = {
             "GaussianNB": GaussianNB(),
             "XGBClassifier": XGBClassifier(objective='binary:logistic'),
             "LogisticRegression": LogisticRegression()
         }
-
+        
     def evaluate_models(self,
                         X_train,
                         X_test,
                         y_train,
                         y_test,
                         models):
+                        
         try:
-
             report = {}
-
+            
             for i in range(len(list(models))):
                 model = list(models.values())[i]
-
+                
                 model.fit(X_train, y_train)  # Train model
-
+                
                 y_train_pred = model.predict(X_train)
-
                 y_test_pred = model.predict(X_test)
-
-                train_model_score = accuracy_score(y_train, y_train_pred)
-
+                # train_model_score = accuracy_score(y_train, y_train_pred)
+                
                 test_model_score = accuracy_score(y_test, y_test_pred)
-
                 report[list(models.keys())[i]] = test_model_score
-
+                
             return report
-
+            
         except Exception as e:
             raise CustomException(e, sys)
-
+            
     def get_best_model(self,
                        x_train: np.array,
                        y_train: np.array,
                        x_test: np.array,
                        y_test: np.array):
         try:
-
+            
             model_report: dict = self.evaluate_models(
                 x_train=x_train,
                 y_train=y_train,
@@ -110,34 +104,31 @@ class ModelTrainer:
                 y_test=y_test,
                 models=self.models
             )
-
             print(model_report)
-
+            
             best_model_score = max(sorted(model_report.values()))
-
+            
             ## To get best model name from dict
-
+            
             best_model_name = list(model_report.keys())[
                 list(model_report.values()).index(best_model_score)
             ]
-
             best_model_object = self.models[best_model_name]
-
+            
             return best_model_name, best_model_object, best_model_score
-
-
+            
         except Exception as e:
             raise CustomException(e, sys)
-
+            
     def finetune_best_model(self,
                             best_model_object: object,
                             best_model_name,
                             X_train,
                             y_train,
                             ) -> object:
-
+                            
         try:
-
+            
             model_param_grid = self.utils.read_yaml_file(self.model_trainer_config.model_config_file_path)["model_selection"]["model"][
                     best_model_name]["search_param_grid"]
 
