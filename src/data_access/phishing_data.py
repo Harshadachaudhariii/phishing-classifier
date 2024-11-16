@@ -12,7 +12,7 @@ class PhisingData:
     """
     This class help to export entire mongo db record as pandas dataframe
     """
-    def __init__(self,
+    def _init_(self,
                  database_name: str):
         """
         """
