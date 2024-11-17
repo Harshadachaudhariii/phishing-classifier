@@ -6,7 +6,6 @@ import os
 import shutil
 import json
 
-# from venv.Lib.pathlib import Path
 from pathlib import Path
 from src.constant import *
 from src.exception import CustomException

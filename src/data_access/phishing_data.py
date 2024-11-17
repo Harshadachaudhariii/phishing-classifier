@@ -1,6 +1,6 @@
 import sys
 from typing import Optional, List
-from database_connect import mongo_operation as mongo
+from src.data_access.database_connect import MongoOperation as mongo
 from pymongo import MongoClient
 import numpy as np
 import pandas as pd
@@ -12,7 +12,7 @@ class PhisingData:
     """
     This class help to export entire mongo db record as pandas dataframe
     """
-    def _init_(self,
+    def __init__(self,
                  database_name: str):
         """
         """
@@ -21,6 +21,7 @@ class PhisingData:
             self.mongo_url = os.getenv("MONGO_DB_URL")
         except Exception as e:
             raise CustomException(e, sys)
+        
     def get_collection_names(self) -> List:
         mongo_db_client = MongoClient(self.mongo_url)
         collection_names = mongo_db_client[self.database_name].list_collection_names()
