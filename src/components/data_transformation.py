@@ -11,12 +11,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from imblearn.over_sampling import RandomOverSampler
 
-from src.constant import *
+from src.constant import TARGET_COLUMN , artifact_folder #,MODEL_FILE_EXTENSION,MODEL_FILE_NAME,MONGO_DATABASE_NAME,artifact_folder_name
 from src.exception import CustomException
 from src.logger import logging
 from src.utils.main_utils import MainUtils
 from dataclasses import dataclass
-
 
 @dataclass
 class DataTransformationConfig:

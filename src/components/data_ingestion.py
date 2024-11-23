@@ -3,8 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 from pymongo import MongoClient
-from zipfile import Path
-from src.constant import MONGO_DATABASE_NAME,artifact_folder
+from pathlib import Path
+from src.constant import artifact_folder, MONGO_DATABASE_NAME, artifact_folder_name, TARGET_COLUMN, MODEL_FILE_NAME, MODEL_FILE_EXTENSION
 from src.exception import CustomException
 from src.logger import logging
 
@@ -12,12 +12,10 @@ from src.data_access.phishing_data import PhisingData
 from src.utils.main_utils import MainUtils
 from dataclasses import dataclass
 
-
 @dataclass
 class DataIngestionConfig:
     data_ingestion_dir: str = os.path.join(artifact_folder, "data_ingestion")
-
-
+    
 class DataIngestion:
     def __init__(self):
 

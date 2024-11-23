@@ -1,4 +1,4 @@
-{	"SampleFileName": "pishing_08012020_120000.csv",
+{	"SampleFileName": "phising_08012020_120000.csv",
 	"LengthOfDateStampInFile": 8,
 	"LengthOfTimeStampInFile": 6,
 	"NumberofColumns" : 31,
@@ -34,6 +34,5 @@
 				"Links_pointing_to_page": "INTEGER" ,
 				"Statistical_report": "INTEGER" ,
 				"Result" : "INTEGER"
-
 	}
 }

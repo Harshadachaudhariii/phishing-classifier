@@ -1,14 +1,15 @@
 import pathlib
-import sys, os
+import sys
+import os
 
 import numpy as np
 
-from src.component.data_ingestion import DataIngestion
-from src.component.data_validation import DataValidation
-from src.component.data_transformation import DataTransformation
-from src.component.model_trainer import ModelTrainer
+from src.components.data_ingestion import DataIngestion
+from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
+from src.components.data_validation import DataValidation
 from src.exception import CustomException
-
+from src.logger import logging
 
 class TrainingPipeline:
 
@@ -19,6 +20,7 @@ class TrainingPipeline:
             return raw_data_dir
 
         except Exception as e:
+            logging.error(f"Error during data ingestion: {e}")
             raise CustomException(e, sys)
 
     def start_data_validation(self, raw_data_dir):
@@ -28,6 +30,7 @@ class TrainingPipeline:
             return valid_data_dir
 
         except Exception as e:
+            logging.error(f"Error during data validation: {e}")
             raise CustomException(e, sys)
 
     def start_data_transformation(self, valid_data_dir):
@@ -37,6 +40,7 @@ class TrainingPipeline:
             return x_train, y_train, x_test, y_test, preprocessor_path
 
         except Exception as e:
+            logging.error(f"Error during data transformation: {e}")
             raise CustomException(e, sys)
 
     def start_model_training(self,
@@ -57,16 +61,29 @@ class TrainingPipeline:
             return model_score
 
         except Exception as e:
+            logging.error(f"Error during model training: {e}")
             raise CustomException(e, sys)
 
     def run_pipeline(self):
         try:
+            logging.info("Starting data ingestion process.")
             raw_data_dir = self.start_data_ingestion()
+            logging.info("Data ingestion completed.")
+            
+            logging.info("Starting data validation process.")
             valid_data_dir = self.start_data_validation(raw_data_dir)
+            logging.info("Data validation completed.")
+            
+            logging.info("Starting data transformation process.")
             x_train, y_train, x_test, y_test, preprocessor_path = self.start_data_transformation(valid_data_dir)
+            logging.info("Data transformation completed.")
+            
+            logging.info("Starting model training process.")
             r2_square = self.start_model_training(x_train, y_train, x_test, y_test, preprocessor_path)
+            logging.info(f"Model training completed. Trained model score: {r2_square}")
 
             print("training completed. Trained model score : ", r2_square)
 
         except Exception as e:
+            logging.error(f"Error in running the pipeline: {e}")
             raise CustomException(e, sys)

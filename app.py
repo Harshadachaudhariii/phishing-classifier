@@ -3,8 +3,6 @@ from src.exception import CustomException
 from src.logger import logging as lg
 import os
 import sys
-# from src.data_access.database_connect import mongo_operation
-
 
 from src.pipeline.train_pipeline import TrainingPipeline
 from src.pipeline.predict_pipeline import PredictionPipeline
@@ -49,4 +47,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug= True)
+    app.run(host="0.0.0.0", port=8080, debug= True)

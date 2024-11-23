@@ -9,14 +9,12 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.compose import ColumnTransformer
 from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
-from src.constant import *
+from src.constant import  artifact_folder #,MODEL_FILE_EXTENSION,MODEL_FILE_NAME,MONGO_DATABASE_NAME,artifact_folder_name,TARGET_COLUMN
 from src.exception import CustomException
 from src.logger import logging
 from src.utils.main_utils import MainUtils
 
 from dataclasses import dataclass
-
-
 @dataclass
 class ModelTrainerConfig:
     model_trainer_dir = os.path.join(artifact_folder, 'model_trainer')
@@ -164,13 +162,13 @@ class ModelTrainer:
                                y_test,
                                preprocessor_path):
         try:
-            logging.info(f"Splitting training and testing input and target feature")
+            logging.info("Splitting training and testing input and target feature")
 
-            logging.info(f"Extracting model config file path")
+            logging.info("Extracting model config file path")
 
             preprocessor = self.utils.load_object(file_path=preprocessor_path)
 
-            logging.info(f"Extracting model config file path")
+            logging.info("Extracting model config file path")
 
             model_report: dict = self.evaluate_models(
                 X_train=x_train,
@@ -205,7 +203,7 @@ class ModelTrainer:
             if best_model_score < 0.5:
                 raise Exception("No best model found with an accuracy greater than the threshold 0.6")
 
-            logging.info(f"Best found model on both training and testing dataset")
+            logging.info("Best found model on both training and testing dataset")
 
             custom_model = VisibilityModel(
                 preprocessing_object=preprocessor,
@@ -223,9 +221,9 @@ class ModelTrainer:
                 obj=custom_model,
             )
 
-            self.utils.upload_file(from_filename=self.model_trainer_config.trained_model_path,
-                                   to_filename="model.pkl",
-                                   bucket_name=AWS_S3_BUCKET_NAME)
+            # self.utils.upload_file(from_filename=self.model_trainer_config.trained_model_path,
+            #                        to_filename="model.pkl",
+            #                        bucket_name=AWS_S3_BUCKET_NAME)
 
             return best_model_score
 
